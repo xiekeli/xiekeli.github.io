@@ -1,450 +1,64 @@
-<!DOCTYPE html>
-<html >
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="John Doe" />
-
-
-    
-    
-
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-    <style> .article { opacity: 0;} </style>
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>Hexo</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: true,
-        isPost: false,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: undefined
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">John Doe</a></h1>
-        </hgroup>
-
-        
-
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                            <li><a href="/tags/">标签云</a></li>
-                        
-                            <li><a href="/about/">关于我</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">专注于前端</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">John Doe</a></h1>
+---
+layout: default
+---
+<div id="index" class="row">
+  <div class="col-sm-9">
+    <div class="post-area">
+      <!-- small button -->
+     <!--  <p class="pull-right visible-xs">
+       <button>toggle</button>
+     </p> -->
+      <div class="post-list-header">
+        Posts
       </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
+      <div class="post-list-body">
+        
+        <div class="all-posts" post-cate="All">
+          {% for post in site.posts %}
+            <a class="post-list-item" href="{{ post.url | prepend: site.baseurl }}">
+              <h2>
+              {{ post.title }}
+              </h2>
+              <span class="">{{ post.date | date: "%b %-d, %Y" }}</span>
             </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">John Doe</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                    <li><a href="/tags/">标签云</a></li>
-                
-                    <li><a href="/about/">关于我</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="mailto:123@123.com" title="Email"></a>
-                            
-                                <a class="fa GitHub" target="_blank" href="#" title="GitHub"></a>
-                            
-                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap">
-  
-    <article id="post-Token" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/11/27/Token/" class="article-date">
-      <time datetime="2016-11-27T07:20:05.583Z" itemprop="datePublished">2016-11-27</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>@(学习记录_2016)[学习笔记]</p>
-<p>#MySQL主键设计的一点思考</p>
-<p>[TOC]<br>在项目过程中遇到一个看似极为基础的问题，但是在深入思考后还是引出了不少问题，觉得有必要把这一学习过程进行记录。</p>
-<p>##MySQL主键设计原则</p>
-<ul>
-<li>MySQL主键应当是对用户没有意义的。</li>
-<li>MySQL主键应该是单列的，以便提高连接和筛选操作的效率</li>
-<li>永远也不要更新MySQL主键</li>
-<li>MySQL主键不应包含动态变化的数据，如时间戳、创建时间列、修改时间列等</li>
-<li>MySQL主键应当有计算机自动生成。</li>
-</ul>
-<p>##主键设计的常用方案</p>
-<p>###自增ID<br><strong>优点</strong>：</p>
-<p>1、数据库自动编号，速度快，而且是增量增长，聚集型主键按顺序存放，对于检索非常有利。</p>
-<p>2、 数字型，占用空间小，易排序，在程序中传递方便。</p>
-<p><strong>缺点</strong>：<br>1、不支持水平分片架构，水平分片的设计当中，这种方法显然不能保证全局唯一。<br>2、表锁</p>
-<blockquote>
-<p>在MySQL5.1.22之前，InnoDB自增值是通过其本身的自增长计数器来获取值，该实现方式是通过表锁机制来完成的（AUTO-INC LOCKING）。锁不是在每次事务完成后释放，而是在完成对自增长值插入的SQL语句后释放，要等待其释放才能进行后续操作。比如说当表里有一个auto_increment字段的时候，innoDB会在内存里保存一个计数器用来记录auto_increment的值，当插入一个新行数据时，就会用一个表锁来锁住这个计数器，直到插入结束。如果大量的并发插入，表锁会引起SQL堵塞。<br>在5.1.22之后，InnoDB为了解决自增主键锁表的问题，引入了参数innodb_autoinc_lock_mode：</p>
-<ul>
-<li>0：通过表锁的方式进行，也就是所有类型的insert都用AUTO-inc locking（表锁机制）。</li>
-<li>1：默认值，对于simple insert 自增长值的产生使用互斥量对内存中的计数器进行累加操作，对于bulk insert 则还是使用表锁的方式进行。</li>
-<li>2：对所有的insert-like 自增长值的产生使用互斥量机制完成，性能最高，并发插入可能导致自增值不连续，可能会导致Statement 的 Replication 出现不一致，使用该模式，需要用 Row Replication的模式。</li>
-</ul>
-</blockquote>
-<p>3、自增主键不连续</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Create Table: CREATE TABLE `tmp_auto_inc` (</div><div class="line">  `id` int(11) NOT NULL AUTO_INCREMENT,</div><div class="line">  `talkid` int(11) DEFAULT NULL,</div><div class="line">  PRIMARY KEY (`id`)</div><div class="line">) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=gbk</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
-<p>当插入10条记录的时候，因为AUTO_INCREMENT=16，所以下次再插入的时候，主键就会不连续。</p>
-<p>###UUID<br><strong>优点</strong><br>1、全局唯一性、安全性、可移植性。</p>
-<p>2、能够保证独立性，程序可以在不同的数据库间迁移，效果不受影响。</p>
-<p>3、保证生成的ID不仅是表独立的，而且是库独立的，在你切分数据库的时候尤为重要</p>
-<p><strong>缺点</strong><br>1、针对InnoDB引擎会徒增IO压力，InnoDB为聚集主键类型的引擎，数据会按照主键进行排序，由于UUID的无序性，InnoDB会产生巨大的IO压力。InnoDB主键索引和数据存储位置相关（簇类索引），uuid 主键可能会引起数据位置频繁变动，严重影响性能。<br>2、UUID长度过长，一个UUID占用128个比特（16个字节）。主键索引KeyLength长度过大，而影响能够基于内存的索引记录数量，进而影响基于内存的索引命中率，而基于硬盘进行索引查询性能很差。严重影响数据库服务器整体的性能表现。</p>
-<p>###自定义序列表<br>所谓自定义序列表，就是在库中建一张用于生成序列的表来存储序列信息，序列生成的策略通过程序层面来实现。如下所示，构建一张序列表：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `sequence` (</div><div class="line">    `name` varchar(50) NOT NULL,</div><div class="line">    `id` bigint(20) unsigned NOT NULL DEFAULT &apos;0&apos;,</div><div class="line">    PRIMARY KEY (`name`)</div><div class="line">) ENGINE=InnoDB;</div></pre></td></tr></table></figure>
-<p>注意区别，id字段不是自增的，也不是主键。在使用前，我们需要先插入一些初始化数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INSERT INTO `sequence` (`name`) VALUES </div><div class="line">(&apos;users&apos;), (&apos;photos&apos;), (&apos;albums&apos;), (&apos;comments&apos;);</div></pre></td></tr></table></figure></p>
-<p>接下来，我们可以通过执行下面的SQL语句来获得新的照片ID：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 1) WHERE `name` = &apos;photos&apos;;</div><div class="line">SELECT LAST_INSERT_ID();</div></pre></td></tr></table></figure>
-<p>我们执行了一个更新操作，将id字段增加1，并将增加后的值传递到LAST_INSERT_ID函数， 从而指定了LAST_INSERT_ID的返回值。</p>
-<p>实际上，我们不一定需要预先指定序列的名字。如果我们现在需要一种新的序列，我们可以直接执行下面的SQL语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INSERT INTO `sequence` (`name`) VALUES(&apos;new_business&apos;) ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id` + 1);</div><div class="line">SELECT LAST_INSERT_ID();</div></pre></td></tr></table></figure>
-<p>这种方案的问题在于序列生成的逻辑脱离了数据库层，由应用层负责，增加了开发复杂度。当然，其实可以用spring来解决这一问题，因为在spring JDBC中已经对这种序列生成逻辑进行了简单的封装。<br>我们可以看一下spring的相关源代码：MySQLMaxValueIncrementer.<br><img src="./无标题.png" alt="Alt text"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected synchronized long getNextKey() throws DataAccessException &#123;</div><div class="line">	if (this.maxId == this.nextId) &#123;</div><div class="line">		/*</div><div class="line">		* Need to use straight JDBC code because we need to make sure that the insert and select</div><div class="line">		* are performed on the same connection (otherwise we can&apos;t be sure that last_insert_id()</div><div class="line">		* returned the correct value)</div><div class="line">		*/</div><div class="line">		Connection con = DataSourceUtils.getConnection(getDataSource());</div><div class="line">		Statement stmt = null;</div><div class="line">		try &#123;</div><div class="line">			stmt = con.createStatement();</div><div class="line">			DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());</div><div class="line">			// Increment the sequence column...</div><div class="line">			String columnName = getColumnName();</div><div class="line">			stmt.executeUpdate(&quot;update &quot;+ getIncrementerName() + &quot; set &quot; + columnName +</div><div class="line">					&quot; = last_insert_id(&quot; + columnName + &quot; + &quot; + getCacheSize() + &quot;)&quot;);</div><div class="line">			// Retrieve the new max of the sequence column...</div><div class="line">			ResultSet rs = stmt.executeQuery(VALUE_SQL);</div><div class="line">			try &#123;</div><div class="line">				if (!rs.next()) &#123;</div><div class="line">					throw new DataAccessResourceFailureException(&quot;last_insert_id() failed after executing an update&quot;);</div><div class="line">				&#125;</div><div class="line">				this.maxId = rs.getLong(1);</div><div class="line">			&#125;</div><div class="line">			finally &#123;</div><div class="line">				JdbcUtils.closeResultSet(rs);</div><div class="line">			&#125;</div><div class="line">			this.nextId = this.maxId - getCacheSize() + 1;</div><div class="line">		&#125;</div><div class="line">		catch (SQLException ex) &#123;</div><div class="line">			throw new DataAccessResourceFailureException(&quot;Could not obtain last_insert_id()&quot;, ex);</div><div class="line">		&#125;</div><div class="line">		finally &#123;</div><div class="line">			JdbcUtils.closeStatement(stmt);</div><div class="line">			DataSourceUtils.releaseConnection(con, getDataSource());</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	else &#123;</div><div class="line">		this.nextId++;</div><div class="line">	&#125;</div><div class="line">	return this.nextId;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>spring的实现也就是通过update语句对incrementerName表里的columnName 列进行递增，并通过mysql的last_insert_id()返回最近生成的值。并保证了事务性及方法的并发支持。只是这个实现有些过于简单，比如：一个表对应一个序列的做法在实际应用开发中显得过于零碎，所以在实际应用中需要对其实现进行修改，实现一条记录对应一个序列的策略。另外对水平分片的支持并不在这一实现考虑范围内。同时，这种做法依然无法回避表锁的机制，所以这里通过CacheSize()的做法，实现了一次申请并缓存在内存中，以减少表锁的发生频率。</p>
-<p>##如何解决水平分片的需求</p>
-<p>###UUID<br>由于UUID出现重复的概率基本可以忽略，所以对分片是天生支持的。</p>
-<p>###独立的序列库<br>单独建立一个库用来生成ID，在Shard中的每张表在这个ID库中都有一个对应的表，而这个对应的表只有一个字段， 这个字段是自增的。当我们需要插入新的数据，我们首先在ID库中的相应表中插入一条记录，以此得到一个新的ID， 然后将这个ID作为插入到Shard中的数据的主键。这个方法的缺点就是需要额外的插入操作，如果ID库变的很大， 性能也会随之降低。所以一定要保证ID库的数据集不要太大，一个办法是定期清理前面的记录</p>
-<p>###复合标识符<br>这种做法是通过联合主键的策略，即通过两个字段来生成一个唯一标识，前半部分是分片标识符，后半部分是本地生成的标识符（比如使用AUTO_INCREMENT生成）</p>
-<p>###带分库策略的自定义序列表<br>这种做法可以基于上面提到的<strong>自定义序列表</strong>的方法的基础上，做一些技巧性的调整。即如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 1) WHERE `name` = &apos;photos&apos;;</div><div class="line">SELECT LAST_INSERT_ID();</div></pre></td></tr></table></figure>
-<p>这里的id初始值设定上要求不同的分片取不同的值，且必须连续。同时将每次递增的步长设定为服务器数目。<br>比如有3台机器，那么我们只要将初始值分别设置为1，2，3. 然后执行下面的语句即可：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 3) WHERE `name` = &apos;photos&apos;;</div><div class="line">SELECT LAST_INSERT_ID();</div></pre></td></tr></table></figure>
-<p>这就可以解决主键生成冲突的问题。但是如果在运行一段时间后要进行动态扩充分片数的时候，需要对序列初始值做一次调整，以确保其连续性，否则依然可能存在冲突的可能。当然这些逻辑可以封装在数据访问层的代码中。</p>
-<p>##主键的必要性<br>表中每一行都应该有可以唯一标识自己的一列（或一组列）。虽然并不总是都需要主键，但大多数数据库设计人员都应保证他们创建的每个表有一个主键，以便于以后数据操纵和管理。其实即使你不建主键，MySQL（InnoDB引擎）也会自己建立一个隐藏6字节的ROWID作为主键列，详细可以参见[这里]        </p>
-<p>因为，InnoDB引擎使用聚集索引，数据记录本身被存于主索引（一颗B+Tree）的叶子节点上。这就要求同一个叶子节点内（大小为一个内存页或磁盘页）的各条数据记录按主键顺序存放，因此每当有一条新的记录插入时，MySQL 会根据其主键将其插入适当的节点和位置，如果页面达到装载因子（InnoDB默认为15/16），则开辟一个新的页（节点）<br><img src="./无标题2.png" alt="Alt text"><br>所以在使用innoDB表时要避免随机的（不连续且值的分布范围非常大）聚簇索引，特别是针对I/O密集型的应用。例如：从性能角度考虑，使用UUID的方案就会导致聚簇索引的插入变得完全随机。</p>
-<p>###主键的数据类型选择<br>关于主键的类型选择上最常见的争论是用整型还是字符型的问题，关于这个问题《高性能MySQL》一书中有明确论断：<br><strong>整数通常是标识列的最好选择，因为它很快且可以使用AUTO_INCREAMENT,如果可能，应该避免使用字符串类型作为标识列，因为很消耗空间，且通常比数字类型慢。</strong></p>
-<p>如果是使用MyISAM，则就更不能用字符型，因为MyISAM默认会对字符型采用压缩引擎，从而导致查询变得非常慢。<br>参考：<br>1、<a href="http://www.cnblogs.com/lsx1993/p/4663147.html" target="_blank" rel="external">http://www.cnblogs.com/lsx1993/p/4663147.html</a><br>2、<a href="http://www.cnblogs.com/zhoujinyi/p/3433823.html" target="_blank" rel="external">http://www.cnblogs.com/zhoujinyi/p/3433823.html</a><br>3、<a href="http://www.zolazhou.com/posts/primary-key-selection-in-database-partition-design/" target="_blank" rel="external">http://www.zolazhou.com/posts/primary-key-selection-in-database-partition-design/</a><br>4、《高性能MySQL》<br>5、《高可用MySQL》</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-  
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2016 John Doe
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+          {% endfor %}
         </div>
+        <!-- <div class="posts-in-categories"> -->
+        {% for category in site.categories %}
+          <div post-cate="{{category | first}}">
+            {% for posts in category  %}
+              {% for post in posts %}
+                {% if post.url %}
+                  <a href="{{ post.url }}" class="post-list-item">
+                    <h2>
+                    {{ post.title }}
+                    </h2>
+                    <span class="">{{ post.date | date: "%b %-d, %Y" }}</span>
+                  </a>
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endfor %}
         
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
+        <!-- </div> -->
+      </div>
     </div>
-</footer>
-    </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-            
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
-</body>
-</html>
+  <div class="col-sm-3">
+    <div class="shadow-corner-curl hidden-xs">
+      <div class="categories-list-header">
+        Categories
+      </div>
+      
+      <a href="javascript:;" class="categories-list-item" cate="All">
+        All<span class="my-badge"> {{site.categories | size}}</span>
+      </a>
+      {% for category in site.categories %}
+        <a href="javascript:;" class="categories-list-item" cate="{{ category | first }}">
+          {{ category | first }} <span class="my-badge">{{ category | last | size }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
