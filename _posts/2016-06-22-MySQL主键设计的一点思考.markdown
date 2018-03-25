@@ -112,7 +112,8 @@ SELECT LAST_INSERT_ID();
 
 这种方案的问题在于序列生成的逻辑脱离了数据库层，由应用层负责，增加了开发复杂度。当然，其实可以用spring来解决这一问题，因为在spring JDBC中已经对这种序列生成逻辑进行了简单的封装。
 我们可以看一下spring的相关源代码：MySQLMaxValueIncrementer.
-![avatar](img/in-post/180325/1.png)
+
+![](/img/in-post/180325/1.png)
 
 ```
 	@Override
@@ -201,21 +202,28 @@ SELECT LAST_INSERT_ID();
 
 
 因为，InnoDB引擎使用聚集索引，数据记录本身被存于主索引（一颗B+Tree）的叶子节点上。这就要求同一个叶子节点内（大小为一个内存页或磁盘页）的各条数据记录按主键顺序存放，因此每当有一条新的记录插入时，MySQL 会根据其主键将其插入适当的节点和位置，如果页面达到装载因子（InnoDB默认为15/16），则开辟一个新的页（节点）
-![avatar](img/in-post/180325/2.png)
+![](/img/in-post/180325/2.png)
 所以在使用innoDB表时要避免随机的（不连续且值的分布范围非常大）聚簇索引，特别是针对I/O密集型的应用。例如：从性能角度考虑，使用UUID的方案就会导致聚簇索引的插入变得完全随机。
 
 ### 主键的数据类型选择
 
 关于主键的类型选择上最常见的争论是用整型还是字符型的问题，关于这个问题《高性能MySQL》一书中有明确论断：
+
 **整数通常是标识列的最好选择，因为它很快且可以使用AUTO_INCREAMENT,如果可能，应该避免使用字符串类型作为标识列，因为很消耗空间，且通常比数字类型慢。**
 
 
 如果是使用MyISAM，则就更不能用字符型，因为MyISAM默认会对字符型采用压缩引擎，从而导致查询变得非常慢。
+
 参考：
+
 1、http://www.cnblogs.com/lsx1993/p/4663147.html
+
 2、http://www.cnblogs.com/zhoujinyi/p/3433823.html
+
 3、http://www.zolazhou.com/posts/primary-key-selection-in-database-partition-design/
+
 4、《高性能MySQL》
+
 5、《高可用MySQL》
 
 
