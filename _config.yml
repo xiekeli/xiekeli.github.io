@@ -58,9 +58,10 @@ netease_comment: false
 # Analytics settings
 # Baidu Analytics 
 # ba_track_id: [your track id]
+baidu_tongji_id: 7753d3fb825bce9f859e63fdd61cd48d
 
 # Google Analytics
-ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+ga_track_id: 'UA-2092357-5'            # Format: UA-xxxxxx-xx
 ga_domain: xiekeli.github.io
 
 
