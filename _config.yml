@@ -61,7 +61,7 @@ netease_comment: false
 baidu_tongji_id: 7753d3fb825bce9f859e63fdd61cd48d
 
 # Google Analytics
-ga_track_id: 'UA-2092357-5'            # Format: UA-xxxxxx-xx
+ga_track_id: 'UA-2092357-6'            # Format: UA-xxxxxx-xx
 ga_domain: xiekeli.github.io
 
 
