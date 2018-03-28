@@ -1,0 +1,55 @@
+---
+layout:     post
+title:      "Hello 2018"
+subtitle:   " \"Hello World, Hello Blog\""
+date:       2018-03-25 19:00:00
+author:     "Jun"
+header-img: "img/post-bg-2015.jpg"
+catalog: true
+tags:
+    - 生活
+---
+
+> “Yeah It's on. ”
+
+
+## 前言
+
+Blog断断续续的写了好几年了，从blogbus到博客园，一直觉得只要有地方做个记录就行，并不想太折腾去弄个人网站。就像一个为了生计奔波的人，有个住处就行了。
+
+[跳过废话，直接看技术实现 ](#build) 
+
+
+
+2018 年，不知不觉尽然进入了不惑之年，可内心还是充满了疑惑和迷茫。
+
+
+作为一个一直都记录习惯的程序员，觉得应该有个家了，在过完苟且的生活后能在这个地方做做自己喜欢的事情，找找自己的远方吧。
+
+之前的[博客](http://www.cnblogs.com/xiekeli/)就像一座荒芜了数年的破屋，随着远离了代码而布满了蛛网。随它去吧，就算是成长的印记吧。
+
+
+<p id = "build"></p>
+---
+
+## 正文
+
+接下来说说搭建这个博客的技术细节。  
+
+正好之前就有关注过 [GitHub Pages](https://pages.github.com/) + [Jekyll](http://jekyllrb.com/) 快速 Building Blog 的技术方案，非常轻松时尚。
+
+其优点非常明显：
+
+* **Markdown** 带来的优雅写作体验
+* 非常熟悉的 Git workflow ，**Git Commit 即 Blog Post**
+* 利用 GitHub Pages 的域名和免费无限空间，不用自己折腾主机
+	* 如果需要自定义域名，也只需要简单改改 DNS 加个 CNAME 就好了 
+* Jekyll 的自定制非常容易，基本就是个模版引擎
+---
+
+
+## 后记
+
+
+
+
