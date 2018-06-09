@@ -1,0 +1,230 @@
+---
+layout:     post
+title:      "MySQL主键设计的一点思考"
+subtitle:   
+date:       2016-06-22 19:00:00
+author:     "Jun"
+header-img: "img/tech-bg-walle.jpg"
+catalog: true
+tags:
+    - MySQL
+---
+
+> “在项目过程中遇到一个看似极为基础的问题，但是在深入思考后还是引出了不少问题，觉得有必要把这一学习过程进行记录。 ”
+
+
+## MySQL主键设计原则
+
+- MySQL主键应当是对用户没有意义的。
+
+- MySQL主键应该是单列的，以便提高连接和筛选操作的效率
+
+- 永远也不要更新MySQL主键
+
+- MySQL主键不应包含动态变化的数据，如时间戳、创建时间列、修改时间列等
+
+- MySQL主键应当有计算机自动生成。
+
+---
+## 主键设计的常用方案
+
+### 自增ID
+
+**优点**：
+
+1、数据库自动编号，速度快，而且是增量增长，聚集型主键按顺序存放，对于检索非常有利。
+
+2、 数字型，占用空间小，易排序，在程序中传递方便。
+
+**缺点**：
+
+1、不支持水平分片架构，水平分片的设计当中，这种方法显然不能保证全局唯一。
+
+2、表锁
+>在MySQL5.1.22之前，InnoDB自增值是通过其本身的自增长计数器来获取值，该实现方式是通过表锁机制来完成的（AUTO-INC LOCKING）。锁不是在每次事务完成后释放，而是在完成对自增长值插入的SQL语句后释放，要等待其释放才能进行后续操作。比如说当表里有一个auto_increment字段的时候，innoDB会在内存里保存一个计数器用来记录auto_increment的值，当插入一个新行数据时，就会用一个表锁来锁住这个计数器，直到插入结束。如果大量的并发插入，表锁会引起SQL堵塞。
+在5.1.22之后，InnoDB为了解决自增主键锁表的问题，引入了参数innodb_autoinc_lock_mode：
+- 0：通过表锁的方式进行，也就是所有类型的insert都用AUTO-inc locking（表锁机制）。
+- 1：默认值，对于simple insert 自增长值的产生使用互斥量对内存中的计数器进行累加操作，对于bulk insert 则还是使用表锁的方式进行。
+- 2：对所有的insert-like 自增长值的产生使用互斥量机制完成，性能最高，并发插入可能导致自增值不连续，可能会导致Statement 的 Replication 出现不一致，使用该模式，需要用 Row Replication的模式。
+
+3、自增主键不连续
+
+```
+Create Table: CREATE TABLE `tmp_auto_inc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `talkid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=gbk
+1 row in set (0.00 sec) 
+```
+
+当插入10条记录的时候，因为AUTO_INCREMENT=16，所以下次再插入的时候，主键就会不连续。
+
+### UUID
+
+**优点**
+
+1、全局唯一性、安全性、可移植性。
+
+2、能够保证独立性，程序可以在不同的数据库间迁移，效果不受影响。
+
+3、保证生成的ID不仅是表独立的，而且是库独立的，在你切分数据库的时候尤为重要
+
+**缺点**:
+
+1、针对InnoDB引擎会徒增IO压力，InnoDB为聚集主键类型的引擎，数据会按照主键进行排序，由于UUID的无序性，InnoDB会产生巨大的IO压力。InnoDB主键索引和数据存储位置相关（簇类索引），uuid 主键可能会引起数据位置频繁变动，严重影响性能。
+
+2、UUID长度过长，一个UUID占用128个比特（16个字节）。主键索引KeyLength长度过大，而影响能够基于内存的索引记录数量，进而影响基于内存的索引命中率，而基于硬盘进行索引查询性能很差。严重影响数据库服务器整体的性能表现。
+
+### 自定义序列表
+
+所谓自定义序列表，就是在库中建一张用于生成序列的表来存储序列信息，序列生成的策略通过程序层面来实现。如下所示，构建一张序列表：
+
+```
+CREATE TABLE `sequence` (
+    `name` varchar(50) NOT NULL,
+    `id` bigint(20) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (`name`)
+) ENGINE=InnoDB;
+```
+
+注意区别，id字段不是自增的，也不是主键。在使用前，我们需要先插入一些初始化数据：
+
+```
+INSERT INTO `sequence` (`name`) VALUES 
+('users'), ('photos'), ('albums'), ('comments');
+```
+接下来，我们可以通过执行下面的SQL语句来获得新的照片ID：
+
+```
+UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 1) WHERE `name` = 'photos';
+SELECT LAST_INSERT_ID();
+```
+
+我们执行了一个更新操作，将id字段增加1，并将增加后的值传递到LAST_INSERT_ID函数， 从而指定了LAST_INSERT_ID的返回值。
+
+实际上，我们不一定需要预先指定序列的名字。如果我们现在需要一种新的序列，我们可以直接执行下面的SQL语句：
+
+```
+INSERT INTO `sequence` (`name`) VALUES('new_business') ON DUPLICATE KEY UPDATE `id` = LAST_INSERT_ID(`id` + 1);
+SELECT LAST_INSERT_ID();
+```
+
+这种方案的问题在于序列生成的逻辑脱离了数据库层，由应用层负责，增加了开发复杂度。当然，其实可以用spring来解决这一问题，因为在spring JDBC中已经对这种序列生成逻辑进行了简单的封装。
+我们可以看一下spring的相关源代码：MySQLMaxValueIncrementer.
+
+![](/img/in-post/180325/1.png)
+
+```
+	@Override
+	protected synchronized long getNextKey() throws DataAccessException {
+		if (this.maxId == this.nextId) {
+			/*
+			* Need to use straight JDBC code because we need to make sure that the insert and select
+			* are performed on the same connection (otherwise we can't be sure that last_insert_id()
+			* returned the correct value)
+			*/
+			Connection con = DataSourceUtils.getConnection(getDataSource());
+			Statement stmt = null;
+			try {
+				stmt = con.createStatement();
+				DataSourceUtils.applyTransactionTimeout(stmt, getDataSource());
+				// Increment the sequence column...
+				String columnName = getColumnName();
+				stmt.executeUpdate("update "+ getIncrementerName() + " set " + columnName +
+						" = last_insert_id(" + columnName + " + " + getCacheSize() + ")");
+				// Retrieve the new max of the sequence column...
+				ResultSet rs = stmt.executeQuery(VALUE_SQL);
+				try {
+					if (!rs.next()) {
+						throw new DataAccessResourceFailureException("last_insert_id() failed after executing an update");
+					}
+					this.maxId = rs.getLong(1);
+				}
+				finally {
+					JdbcUtils.closeResultSet(rs);
+				}
+				this.nextId = this.maxId - getCacheSize() + 1;
+			}
+			catch (SQLException ex) {
+				throw new DataAccessResourceFailureException("Could not obtain last_insert_id()", ex);
+			}
+			finally {
+				JdbcUtils.closeStatement(stmt);
+				DataSourceUtils.releaseConnection(con, getDataSource());
+			}
+		}
+		else {
+			this.nextId++;
+		}
+		return this.nextId;
+	}
+
+```
+spring的实现也就是通过update语句对incrementerName表里的columnName 列进行递增，并通过mysql的last_insert_id()返回最近生成的值。并保证了事务性及方法的并发支持。只是这个实现有些过于简单，比如：一个表对应一个序列的做法在实际应用开发中显得过于零碎，所以在实际应用中需要对其实现进行修改，实现一条记录对应一个序列的策略。另外对水平分片的支持并不在这一实现考虑范围内。同时，这种做法依然无法回避表锁的机制，所以这里通过CacheSize()的做法，实现了一次申请并缓存在内存中，以减少表锁的发生频率。
+
+---
+## 如何解决水平分片的需求
+
+### UUID
+
+由于UUID出现重复的概率基本可以忽略，所以对分片是天生支持的。
+
+### 独立的序列库
+
+单独建立一个库用来生成ID，在Shard中的每张表在这个ID库中都有一个对应的表，而这个对应的表只有一个字段，这个字段是自增的。当我们需要插入新的数据，我们首先在ID库中的相应表中插入一条记录，以此得到一个新的ID， 然后将这个ID作为插入到Shard中的数据的主键。这个方法的缺点就是需要额外的插入操作，如果ID库变的很大，性能也会随之降低。所以一定要保证ID库的数据集不要太大，一个办法是定期清理前面的记录.
+
+### 复合标识符
+
+这种做法是通过联合主键的策略，即通过两个字段来生成一个唯一标识，前半部分是分片标识符，后半部分是本地生成的标识符（比如使用AUTO_INCREMENT生成）
+
+### 带分库策略的自定义序列表
+
+这种做法可以基于上面提到的**自定义序列表**的方法的基础上，做一些技巧性的调整。即如下：
+
+```
+UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 1) WHERE `name` = 'photos';
+SELECT LAST_INSERT_ID();
+```
+这里的id初始值设定上要求不同的分片取不同的值，且必须连续。同时将每次递增的步长设定为服务器数目。
+比如有3台机器，那么我们只要将初始值分别设置为1，2，3. 然后执行下面的语句即可：
+
+```
+UPDATE `sequence` SET `id` = LAST_INSERT_ID(`id` + 3) WHERE `name` = 'photos';
+SELECT LAST_INSERT_ID();
+```
+这就可以解决主键生成冲突的问题。但是如果在运行一段时间后要进行动态扩充分片数的时候，需要对序列初始值做一次调整，以确保其连续性，否则依然可能存在冲突的可能。当然这些逻辑可以封装在数据访问层的代码中。
+
+---
+## 主键的必要性
+
+表中每一行都应该有可以唯一标识自己的一列（或一组列）。虽然并不总是都需要主键，但大多数数据库设计人员都应保证他们创建的每个表有一个主键，以便于以后数据操纵和管理。其实即使你不建主键，MySQL（InnoDB引擎）也会自己建立一个隐藏6字节的ROWID作为主键列，详细可以参见[这里]        
+
+
+因为，InnoDB引擎使用聚集索引，数据记录本身被存于主索引（一颗B+Tree）的叶子节点上。这就要求同一个叶子节点内（大小为一个内存页或磁盘页）的各条数据记录按主键顺序存放，因此每当有一条新的记录插入时，MySQL 会根据其主键将其插入适当的节点和位置，如果页面达到装载因子（InnoDB默认为15/16），则开辟一个新的页（节点）
+![](/img/in-post/180325/2.png)
+所以在使用innoDB表时要避免随机的（不连续且值的分布范围非常大）聚簇索引，特别是针对I/O密集型的应用。例如：从性能角度考虑，使用UUID的方案就会导致聚簇索引的插入变得完全随机。
+
+### 主键的数据类型选择
+
+关于主键的类型选择上最常见的争论是用整型还是字符型的问题，关于这个问题《高性能MySQL》一书中有明确论断：
+
+**整数通常是标识列的最好选择，因为它很快且可以使用AUTO_INCREAMENT,如果可能，应该避免使用字符串类型作为标识列，因为很消耗空间，且通常比数字类型慢。**
+
+
+如果是使用MyISAM，则就更不能用字符型，因为MyISAM默认会对字符型采用压缩引擎，从而导致查询变得非常慢。
+
+参考：
+
+1、http://www.cnblogs.com/lsx1993/p/4663147.html
+
+2、http://www.cnblogs.com/zhoujinyi/p/3433823.html
+
+3、http://www.zolazhou.com/posts/primary-key-selection-in-database-partition-design/
+
+4、《高性能MySQL》
+
+5、《高可用MySQL》
+
+
+
