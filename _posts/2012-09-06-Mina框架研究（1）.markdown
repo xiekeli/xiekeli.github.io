@@ -1,4 +1,16 @@
-Apache MINA(Multipurpose Infrastructure for Network Applications) 是 Apache 组织一个较新的项目，它为开发高性能和高可用性的网络应用程序提供了非常便利的框架。
+---
+layout:     post
+title:      "Mina框架研究(1)"
+subtitle:   
+date:       2016-06-22 19:00:00
+author:     "Jun"
+header-img: "img/tech-bg-walle.jpg"
+catalog: true
+tags:
+    - Mina
+---
+
+>>Apache MINA(Multipurpose Infrastructure for Network >>Applications) 是 Apache 组织一个较新的项目，它为开发高性能和>>高可用性的网络应用程序提供了非常便利的框架。
 
 这个框架的优点：
 
