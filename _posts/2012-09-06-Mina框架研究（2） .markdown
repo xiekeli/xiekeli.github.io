@@ -11,7 +11,7 @@ tags:
 ---
 
 
-##IoService
+## IoService ##
 IoService是一个接口，有两种实现：IoAcceptor和IoConnector；其中IoAcceptor是针对Server端的实现，IoConnector是针对Client端的实现；IoService的职责包括：
 
 
@@ -23,7 +23,7 @@ IoService是一个接口，有两种实现：IoAcceptor和IoConnector；其中Io
 
 ![](https://i.imgur.com/bxJmGkj.png)
 
-##IoAcceptor
+## IoAcceptor ##
 
 主要用于创建新的连接。MINA提供了多种实现，所以几乎不需要我们自己再去实现：
 
@@ -37,7 +37,7 @@ IoService是一个接口，有两种实现：IoAcceptor和IoConnector；其中Io
 
  
 
-##IoConnector
+## IoConnector ##
 
 针对Client端的Socket连接，有多种实现：
 
@@ -48,7 +48,7 @@ IoService是一个接口，有两种实现：IoAcceptor和IoConnector；其中Io
 **SerialConnector** : 针对串口传输的Connector
 **VmPipeConnector** : the in-VM * Connector*
 
-##Session
+## Session ##
 
 任何时候只要有新的连接到来，都会生成一个Session对象，并且一致保存在内存中，只到连接断开；
 
@@ -66,7 +66,7 @@ Closing :session正在被关闭
 Closed : session已经被关闭
 ![](https://i.imgur.com/kI6gKJP.png)
 
-##IoBuffer
+## IoBuffer ##
 
 IoBuffer是MINA内部使用的一个byte buffer，MINA并没有直接使用NIO 的ByteBuffer。不过IoBuffer 是对 ByteBuffer 的一个封装。IoBuffer 中的很多方法都是对 ByteBuffer 的直接继承。只是对 ByteBuffer 添加了一些扩展了更加实用的方法。
 
