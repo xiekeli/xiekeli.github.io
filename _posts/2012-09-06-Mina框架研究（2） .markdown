@@ -95,9 +95,52 @@ IoBuffer是MINA内部使用的一个byte buffer，MINA并没有直接使用NIO �
 ![](https://i.imgur.com/txv9XDW.png)
 3. 在做写操作之前，我们必须调用一次flip()方法，这个方法做了两件重要的事情： 
   
-
 - 将limit设置到当前的position处。 
 
 - 设置position为0。
 ![](https://i.imgur.com/0jy7m0Z.png)
-iiii、执行写操作后;
+
+
+
+4. 执行写操作后;
+
+![](https://i.imgur.com/xOrAZCv.png)
+5. 执行clear后，position设为0，limit设为capition，mark则丢弃；
+![](https://i.imgur.com/cr9KeUP.png)
+
+因为IoBuffer是一个抽象类，不能直接实例化，所有使用的时候需要调用allocate方法来进行内存分配；
+
+allocate有两种定义：
+
+       1: // Allocates a new buffer with a specific size, defining its type (direct or heap)
+       2: public static IoBuffer allocate(int capacity, boolean direct)
+       3:  
+       4: // Allocates a new buffer with a specific size
+       5: public static IoBuffer allocate(int capacity)
+
+这里：
+
+capacity：buffer的大小；
+
+direct：如果为true，则得到direct buffer，如果为false，则得到heap buffer
+direct buffer和heap buffer的区别分析：
+
+> Direct Buffer不是分配在堆上的，它不被GC直接管理（但Direct Buffer的JAVA对象是归GC管理的，只要GC回收了它的JAVA对象，操作系统才会释放Direct Buffer所申请的空间），它似乎给人感觉是“内核缓冲区（buffer in kernel）”。Heap Buffer则是分配在堆上的，或者我们可以简单理解为Heap Buffer就是byte[]数组的一种封装形式。当我们把一个Heap Buffer写入Channel的时候，实际上底层实现会先构建一个临时的Direct Buffer，然后把Heap Buffer的内容复制到这个临时的Direct Buffer上，再把这个Direct Buffer写出去。因此把一个Direct Buffer写入一个Channel的速度要比把一个Heap Buffer写入一个Channel的速度要快。但是Direct Buffer创建和销毁的代价很高，所以要用在尽可能重用的地方。
+
+public static IoBuffer allocate(int capacity)的用法：
+
+       1: // 设置Allocates分配的默认类型，这里设为heap buffer.
+       2:  IoBuffer.setUseDirectBuffer(false);
+       3:  // 返回一个新的heap buffer.
+       4:  IoBuffer buf = IoBuffer.allocate(1024);
+ 
+
+IoBuffer允许生成一个自动扩展的buffer（这也是没有选择使用NIO的ByteBuffer的原因之一）；通过设置AutoExpand属性即可：
+    
+       1: IoBuffer buffer = IoBuffer.allocate(8);
+       2: buffer.setAutoExpand(true);
+       3:  
+       4: buffer.putString("12345678", encoder);
+       5:
+       6: // Add more to this buffer
+       7: buffer.put((byte)10);
