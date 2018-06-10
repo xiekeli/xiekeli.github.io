@@ -1,0 +1,103 @@
+---
+layout:     post
+title:      "Mina框架研究(1)"
+subtitle:   
+date:       2012-10-16 19:00:00
+author:     "Jun"
+header-img: "img/tech-bg-walle.jpg"
+catalog: true
+tags:
+    - Mina
+---
+
+
+##IoService
+IoService是一个接口，有两种实现：IoAcceptor和IoConnector；其中IoAcceptor是针对Server端的实现，IoConnector是针对Client端的实现；IoService的职责包括：
+
+
+1. 监听器管理
+2. IoHandler
+3. IoSession管理
+4. FilterChain管理
+5. Statistics管理
+
+![](https://i.imgur.com/bxJmGkj.png)
+
+##IoAcceptor
+
+主要用于创建新的连接。MINA提供了多种实现，所以几乎不需要我们自己再去实现：
+
+**NioSocketAcceptor**：无阻塞的Socket 传输Acceptor，针对TCP
+
+**NioDatagramAcceptor** : 无阻塞的Socket 传输Acceptor，针对UDP
+
+**AprSocketAcceptor** : 阻塞的Socket 传输Acceptor,基于 APR
+
+**VmPipeSocketAcceptor** : the in-VM Acceptor
+
+ 
+
+##IoConnector
+
+针对Client端的Socket连接，有多种实现：
+
+**NioSocketConnector** : 无阻塞的Socket 传输Connector，针对TCP 
+**NioDatagramConnector** : 无阻塞的Socket 传输Connector，针对UDP 
+**AprSocketConnector** : 阻塞的Socket 传输Connector,基于 APR 
+**ProxyConnector** : 一个支持代理服务的 Connector ，通过截取连接的请求，并将终端指向代理设置的地址。
+**SerialConnector** : 针对串口传输的Connector
+**VmPipeConnector** : the in-VM * Connector*
+
+##Session
+
+任何时候只要有新的连接到来，都会生成一个Session对象，并且一致保存在内存中，只到连接断开；
+
+Session有一系列状态，如下：
+
+Connected : session被创建，并有效 
+Idle : session至少在一个空闲周期（见配置）内没有处理过任何请求 
+Idle for read : 在一个空闲周期内没有做实际的读操作
+
+Idle for write : 在一个空闲周期内没有做实际的写操作
+
+Idle for both : 在一个空闲周期内没有做实际的读和写操作 
+Closing :session正在被关闭
+
+Closed : session已经被关闭
+![](https://i.imgur.com/kI6gKJP.png)
+
+##IoBuffer
+
+IoBuffer是MINA内部使用的一个byte buffer，MINA并没有直接使用NIO 的ByteBuffer。不过IoBuffer 是对 ByteBuffer 的一个封装。IoBuffer 中的很多方法都是对 ByteBuffer 的直接继承。只是对 ByteBuffer 添加了一些扩展了更加实用的方法。
+
+**基本用法**
+
+由于IoBuffer是对Nio的ByteBuffer 的封装，所以基本概念还是相同的，下面简单介绍一下：
+
+
+1. capacity：该属性描述这个缓冲区最多能缓冲多少个元素，也是Buffer最大存储元素数，这个值是在创建Buffer的时候指定的，且不能修改。
+
+
+2. Limit：在从Buffer中向Channel中写数据时，limit变量指示了还剩多少数据可以读取，在从Channel中读取数据到Buffer中时，limit变量指示了还剩多少空间可供存放数据。position正常情况下小于或者等于limit。
+
+
+3. Position：Buffer实际上也就是个array。当你从Channel中读数据时，你把从Channel中读出来的数据放进底层array，position变量用来跟踪截止目前为止已经写了多少数据。更精确的讲，它指示如果下次写Buffer时数据应该进入array的哪个位置。因此如果已经从Channel中读出了3个字节，Buffer的position会被置为3，指向array中第四个位置。
+
+
+4. Mark：一个可以记忆的Position位置的值，在调用reset()方法时会将缓冲区的Position重置为该索引，并非总是需要定义Mark，但是在定义Mark时，不能将其定义为负数，并且不能让它大于Position，如果定义了Mark，则在该Position或Limit调整为小于该Mark值时，该Mark将被丢弃。
+
+下面通过一个例子来说明：
+
+1. 初始状态下：
+此时position为0，limit和capacity都被设为9；
+![](https://i.imgur.com/ZT3MVwS.png)
+2.  从Channel中读入4个字节数据到Buffer，这时position指向4（第5个）：
+![](https://i.imgur.com/txv9XDW.png)
+3. 在做写操作之前，我们必须调用一次flip()方法，这个方法做了两件重要的事情： 
+  
+
+- 将limit设置到当前的position处。 
+
+- 设置position为0。
+![](https://i.imgur.com/0jy7m0Z.png)
+iiii、执行写操作后;
