@@ -2,7 +2,7 @@
 layout:     post
 title:      "Mina框架研究(1)"
 subtitle:   
-date:       2016-06-22 19:00:00
+date:       2012-09-06 19:00:00
 author:     "Jun"
 header-img: "img/tech-bg-walle.jpg"
 catalog: true
