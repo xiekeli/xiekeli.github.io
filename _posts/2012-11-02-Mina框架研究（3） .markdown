@@ -14,6 +14,7 @@ tags:
 
 IoFilter 是MINA框架中一个核心的部分，如下图，对间于IoService和IoHandle之间，用于过滤所有的I/O事件和请求，其扮演的角色就像J2EE中的Servlet。
 ![](https://i.imgur.com/jdQJtj2.png)
+
 MINA提供不少现成的过滤器：
 
 1、LoggingFilter ：日志过滤器，用于记录所有的事件和请求日志.
@@ -31,12 +32,15 @@ MINA提供不少现成的过滤器：
 还是以官方帮助文档中例子来说明(http://mina.apache.org/chapter-11-codec-filter.html)
 
 这是一个图片服务器程序，请求图片的下行报文格式：
+
 ![](https://i.imgur.com/o6XlaSk.png)
+
 
 width: 请求图片的宽度 
 height: 请求图片的高度 
 numchars: 生成的字节个数
 服务端返回两张图片：
+
 ![](https://i.imgur.com/H5Jyk7o.png)
 
 length1: 图片1的大小 
@@ -89,7 +93,9 @@ acceptor.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new ImageC
     		return decoder;
     	}
     }
+
 ImageCodecFactory是对接口ProtocolCodecFactory 的实现，是用来构建Filter的。ProtocolCodecFactory 接口只有两个方法：
+
     public interface ProtocolCodecFactory {
      
     	public ProtocolEncoder getEncoder(IoSession is) throws Exception;
