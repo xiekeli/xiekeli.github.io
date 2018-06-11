@@ -1,0 +1,148 @@
+---
+layout:     post
+title:      "Mina框架研究(3)"
+subtitle:   
+date:       2012-11-02 19:00:00
+author:     "Jun"
+header-img: "img/tech-bg-walle.jpg"
+catalog: true
+tags:
+    - Mina
+---
+
+## Filters ##
+
+IoFilter 是MINA框架中一个核心的部分，如下图，对间于IoService和IoHandle之间，用于过滤所有的I/O事件和请求，其扮演的角色就像J2EE中的Servlet。
+![](https://i.imgur.com/jdQJtj2.png)
+MINA提供不少现成的过滤器：
+
+1、LoggingFilter ：日志过滤器，用于记录所有的事件和请求日志.
+
+2、ProtocolCodecFilter：规约解析过滤器，用来将所有收到的ByteBuffer内容转换为POJO消息（对象),实现往来报文的编码和解码；
+
+3、CompressionFilter：压缩过滤器；
+
+4、SSLFilter
+
+## ProtocolCodecFilter ##
+
+相对比较常用的是ProtocolCodecFilter，下面主要介绍一下ProtocolCodecFilter的使用：
+
+还是以官方帮助文档中例子来说明(http://mina.apache.org/chapter-11-codec-filter.html)
+
+这是一个图片服务器程序，请求图片的下行报文格式：
+![](https://i.imgur.com/o6XlaSk.png)
+
+width: 请求图片的宽度 
+height: 请求图片的高度 
+numchars: 生成的字节个数
+服务端返回两张图片：
+![](https://i.imgur.com/H5Jyk7o.png)
+
+length1: 图片1的大小 
+image1: 图片1（PNG格式） 
+length2: 图片2的大小
+
+image2: 图片2（PNG格式）
+
+ 
+
+现在如果想通过MINA框架来实现基于这一简单规约的编解码通信功能，应该如何做呢？
+
+    public class ImageServer {
+    	public static final int PORT = 33789;
+    	public static void main(String[] args) throws IOException {
+    	ImageServerIoHandler handler = new ImageServerIoHandler();
+       		NioSocketAcceptor acceptor = new NioSocketAcceptor();
+       		acceptor.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new ImageCodecFactory(false)));
+       		acceptor.setLocalAddress(new InetSocketAddress(PORT));
+       		acceptor.setHandler(handler);
+      		acceptor.bind();
+      		System.out.println("server is listenig at port " + PORT);
+      	}
+    }
+
+这里先来看和Filter有关的部分：
+
+acceptor.getFilterChain().addLast("protocol", new ProtocolCodecFilter(new ImageCodecFactory(false)));
+在acceptor的Filter链中加入我们自己的过滤器，一个ProtocolCodecFilter的实现，这里的ImageCodecFactory又是什么呢？
+
+    public class ImageCodecFactory implements ProtocolCodecFactory {
+    	private ProtocolEncoder encoder;
+    	private ProtocolDecoder decoder;
+    
+    	public ImageCodecFactory(boolean client) {
+    		if (client) {
+    			encoder = new ImageRequestEncoder();
+    			decoder = new ImageResponseDecoder();
+    		} else {
+    			encoder = new ImageResponseEncoder();
+    			decoder = new ImageRequestDecoder();
+    		}
+    	}
+    
+    	public ProtocolEncoder getEncoder(IoSession ioSession) throws Exception {
+    		return encoder;
+    	}
+    
+    	public ProtocolDecoder getDecoder(IoSession ioSession) throws Exception {
+    		return decoder;
+    	}
+    }
+ImageCodecFactory是对接口ProtocolCodecFactory 的实现，是用来构建Filter的。ProtocolCodecFactory 接口只有两个方法：
+    public interface ProtocolCodecFactory {
+     
+    	public ProtocolEncoder getEncoder(IoSession is) throws Exception;
+     
+    	public ProtocolDecoder getDecoder(IoSession is) throws Exception;
+    }
+
+没错，这个规约编解码工厂需要装配一个编码器（Encoder）和一个解码器（Decoder）：
+
+编码器：
+    public class ImageRequestEncoder implements ProtocolEncoder {
+      
+    	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception {
+    		ImageRequest request = (ImageRequest) message;
+    		IoBuffer buffer = IoBuffer.allocate(12, false);
+    		buffer.putInt(request.getWidth());
+    		buffer.putInt(request.getHeight());
+    		buffer.putInt(request.getNumberOfCharacters());
+    		buffer.flip();
+    		out.write(buffer);
+    	}
+    
+    	public void dispose(IoSession session) throws Exception {
+    		// nothing to dispose
+    	}
+    }
+
+解码器：
+    public class ImageRequestDecoder extends CumulativeProtocolDecoder {
+    
+    	protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
+    		if (in.remaining() >= 12) {
+    			int width = in.getInt();
+    			int height = in.getInt();
+    			int numberOfCharachters = in.getInt();
+    			ImageRequest request = new ImageRequest(width, height, numberOfCharachters);
+    			out.write(request);
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	}
+    }
+
+这里解码器不是直接从ProtocolDecoder继承的，为什么呢？因为实际中接受的一个数据包并不能保证包含完整的一帧报文，就是所谓的断帧的情况，如果用CumulativeProtocolDecoder，就不需要自己处理这种情况了，MINA框架会将未解码的数据保留，等下一包数据到来后继续尝试解码；
+
+这里编码器的encode和解码器的doDecode方法就是实际用来进行应用层规约编解码的；其中ImageResuest是下行请求规约对应POJO.
+
+整个类的协助关系如下图所示：
+![](https://i.imgur.com/Hqqx7cQ.jpg)
+
+Filter过滤器处理完后，就交给Handler，做进一步业务处理；
+
+Response部分的就不多罗嗦了，可以看这里
+
+至此对MINA框架用过的一些东西，从使用指南的角度做了一些总结，还有很多方面还没有用过，先留一个坑，等来日填补吧。MINA框架最吸引我的是这种设计思想，将通信、规约解析、业务处理分离得恰到好处，既不影响性能又方便扩展和替换。下一步希望从源代码的角度，学习一下其内部的实现思想。
