@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "《智能商业》读后感"
-subtitle:   " \"Hello World, Hello Blog\""
+subtitle:   " \"双螺旋构成：网络协同 + 数据智能\""
 date:       2020-02-25 21:36:00
 author:     "Jun"
 header-img: "img/post-bg-2015.jpg"
