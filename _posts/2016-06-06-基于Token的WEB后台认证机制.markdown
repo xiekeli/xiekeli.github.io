@@ -8,6 +8,8 @@ header-img: "img/tech-bg-walle.jpg"
 catalog: true
 tags:
     - JWT
+ ---
+ 
 ##几种常用的认证机制
 ### HTTP Basic Auth
 HTTP Basic Auth简单点说明就是每次请求API时都提供用户的username和password，简言之，Basic Auth是配合RESTful API 使用的最简单的认证方式，只需提供用户名密码即可，但由于有把用户名密码暴露给第三方客户端的风险，在生产环境下被使用的越来越少。因此，在开发对外开放的RESTful API时，尽量避免采用HTTP Basic Auth
@@ -17,12 +19,14 @@ OAuth（开放授权）是一个开放的授权标准，允许用户让第三方
 
 OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的第三方系统（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容
 下面是OAuth2.0的流程：
-![Alt text](./3e97c6f9-41a7-398e-9cdb-b60afda794e9.png)
+![](http://images2015.cnblogs.com/blog/34831/201606/34831-20160622150107172-139099471.png)
+
 这种基于OAuth的认证机制适用于个人消费者类的互联网产品，如社交类APP等应用，但是不太适合拥有自有认证权限管理的企业应用；
 ###Cookie Auth
 Cookie认证机制就是为一次请求认证在服务端创建一个Session对象，同时在客户端的浏览器端创建了一个Cookie对象；通过客户端带上来Cookie对象来与服务器端的session对象匹配来实现状态管理的。默认的，当我们关闭浏览器的时候，cookie会被删除。但可以通过修改cookie 的expire time使cookie在一定时间内有效；
 ###Token Auth
-![Alt text](./无标题2.png)
+![](http://images2015.cnblogs.com/blog/34831/201606/34831-20160622150124531-1416052185.png)
+
 ####Token Auth的优点
 Token机制相对于Cookie机制又有什么好处呢？
 
@@ -109,12 +113,16 @@ https://your.awesome-app.com/make-friend/?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1Ni
 - 生成Token的过程中可以调用第三方的JWT Lib生成签名后的JWT数据；
 - 完成JWT数据签名后，将其设置到COOKIE对象中，并重定向到首页，完成登录过程；
 
-![Alt text](./111.jpg)
+![](http://images2015.cnblogs.com/blog/34831/201606/34831-20160622152259735-1969767936.jpg)
+
 
 ####请求认证
 基于Token的认证机制会在每一次请求中都带上完成签名的Token信息，这个Token信息可能在COOKIE
 中，也可能在HTTP的Authorization头中；
-![Alt text](./请求认证.jpg)
+
+![](http://images2015.cnblogs.com/blog/34831/201606/34831-20160622152344250-1238130627.jpg)
+
+
 - 客户端（APP客户端或浏览器）通过GET或POST请求访问资源（页面或调用API）；
 - 认证服务作为一个Middleware HOOK 对请求进行拦截，首先在cookie中查找Token信息，如果没有找到，则在HTTP Authorization Head中查找；
 - 如果找到Token信息，则根据配置文件中的签名加密秘钥，调用JWT Lib对Token信息进行解密和解码；
@@ -212,6 +220,7 @@ http://docs.oracle.com/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2
 建议升级Tomcat7.0，它已经实现了Servlet3.0
 http://tomcat.apache.org/tomcat-7.0-doc/servletapi/javax/servlet/http/Cookie.html
 或者通过这样来设置：
+
 ```
 //设置cookie
 response.addHeader("Set-Cookie", "uid=112; Path=/; HttpOnly");
@@ -222,6 +231,7 @@ response.addHeader("Set-Cookie", "timeout=30; Path=/test; HttpOnly");
 
 //设置https的cookie
 response.addHeader("Set-Cookie", "uid=112; Path=/; Secure; HttpOnly");
+
 ```
 在实际使用中，我们可以使FireCookie查看我们设置的Cookie 是否是HttpOnly；
 ###如何防范Replay Attacks
@@ -231,7 +241,9 @@ response.addHeader("Set-Cookie", "uid=112; Path=/; Secure; HttpOnly");
     这种方案，客户端和服务端都需要知道：
    - User ID
    - 共享秘钥
+
 **客户端**
+
 ```
 auth_header = JWT.encode({
   user_id: 123,
@@ -239,8 +251,10 @@ auth_header = JWT.encode({
   exp: Time.now.to_i + 2   # 指定token过期时间为2秒后，2秒时间足够一次HTTP请求，同时在一定程度确保上一次token过期，减少replay attack的概率；
 }, "<my shared secret>")
 RestClient.get("http://api.example.com/", authorization: auth_header)
+
 ```
 **服务端**
+
 ```
 class ApiController < ActionController::Base
   attr_reader :current_user
@@ -266,9 +280,11 @@ class ApiController < ActionController::Base
     # 返回 401
   end
 end
+
 ```
    2、时间戳 +共享秘钥+黑名单 （类似[Zendesk](https://support.zendesk.com/hc/en-us/articles/203663816-Setting-up-single-sign-on-with-JWT-JSON-Web-Token-)的做法）
    **客户端**
+
 ```
 auth_header = JWT.encode({
   user_id: 123,
@@ -305,6 +321,7 @@ def set_current_user_from_jwt_token
   # 进行键值过期检查
   redis.expireat(key, payload['exp'] + 2)
 end
+
 ```
 ###如何防范MITM （Man-In-The-Middle）Attacks
 所谓MITM攻击，就是在客户端和服务器端的交互过程被监听，比如像可以上网的咖啡馆的WIFI被监听或者被黑的代理服务器等；
